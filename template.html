@@ -10,16 +10,17 @@
     </div>
 <script>
 (function(){
-    var platforms = {
+    const platforms = {
         android: "Android",
         ios: "iOS"
     };
 
-    var appCounter = 0;
+    const STORAGE_KEY = "tealium.apps";
+    let appCounter = 0;
 
-    var addApp = function() {
+    const addApp = function() {
         appCounter++;
-        var appHtml = `
+        const appHtml = `
             <div id="app-${appCounter}" class="app-entry">
                 <hr>
                 <h3>App ${appCounter}</h3>
@@ -53,52 +54,48 @@
         assignFunctions(appCounter);
     };
 
-    var saveURLScheme = function(platform, appId) {
-        var scheme = jQuery(`#url-scheme-input-${platform}-${appId}`).val();
+    const saveURLScheme = function(platform, appId) {
+        let apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        const scheme = jQuery(`#url-scheme-input-${platform}-${appId}`).val();
         if (scheme !== "") {
-            if (scheme.indexOf("https://") === -1 && scheme.indexOf("http://") === -1) {
-                if (scheme.indexOf("://") === -1) {
-                    scheme = scheme + "://";
-                }
+            const schemeFormatted = scheme.indexOf("://") === -1 ? `${scheme}://` : scheme;
+            let app = apps.find(app => app.id === appId) || { id: appId, ios: "", android: "" };
+            app[platform] = schemeFormatted;
+            if (!apps.find(app => app.id === appId)) {
+                apps.push(app);
             }
-            localStorage.setItem(`tealium.${platform}.${appId}`, scheme);    
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
             refreshUI(appId);
         }
     };
 
-    var getURLScheme = function(platform, appId) {
-        var item = localStorage.getItem(`tealium.${platform}.${appId}`);
-        return item === undefined ? "" : item;
+    const getURLScheme = function(platform, appId) {
+        const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        const app = apps.find(app => app.id === appId);
+        return app ? app[platform] : "";
     };
 
-    var editScheme = function(existing, platform, appId) {
-        var elem = jQuery(`#url-scheme-input-${platform}-${appId}`);
-        if (existing) {
-            elem.val(existing);
-        }
+    const editScheme = function(existing, platform, appId) {
+        jQuery(`#url-scheme-input-${platform}-${appId}`).val(existing);
         jQuery(`#url-scheme-saved-${platform}-${appId}`).hide(); 
         jQuery(`#initial-${platform}-${appId}`).show();
     };
 
-    var invokeTrace = function(scheme, platform) {
+    const invokeTrace = function(scheme, platform) {
         window.tealiumTools.invokeFunction("receiveFromToolWindow", {"urlScheme": scheme, "platform": platform});
     };
 
-    var refreshUI = function(appId) {
-        var urlSchemeiOS = getURLScheme(platforms.ios.toLowerCase(), appId);
-        var urlSchemeAndroid = getURLScheme(platforms.android.toLowerCase(), appId);
+    const refreshUI = function(appId) {
+        const urlSchemeiOS = getURLScheme(platforms.ios.toLowerCase(), appId);
+        const urlSchemeAndroid = getURLScheme(platforms.android.toLowerCase(), appId);
         inject(urlSchemeiOS, platforms.ios.toLowerCase(), appId);
         inject(urlSchemeAndroid, platforms.android.toLowerCase(), appId);
-        if (urlSchemeiOS || urlSchemeAndroid) {
-            jQuery("div#startTraceButton").show();
-        } else {
-            jQuery("div#startTraceButton").hide();
-        }
+        toggleStartTraceButton();
     };
 
-    var inject = function(scheme, platform, appId) {
-        if(scheme) {
-            jQuery(`#url-scheme-saved-${platform}-${appId}`).html("");
+    const inject = function(scheme, platform, appId) {
+        if (scheme) {
+            jQuery(`#url-scheme-saved-${platform}-${appId}`).html(``);
             jQuery(`#url-scheme-saved-${platform}-${appId}`).append(`Your URL scheme for ${platform} is saved as: <br /> <span style='vertical-align:middle;font-size:20px;padding:6px;font-weight:normal;display:block;margin-left:auto;margin-right:auto;width:75%;'> <a style='cursor:pointer' id='edit-${platform}-${appId}' class='edit-${platform}'>\u270E   </a>${scheme}</span>`);
             jQuery(`#initial-${platform}-${appId}`).hide();    
             jQuery(`#url-scheme-saved-${platform}-${appId}`).show(); 
@@ -108,7 +105,7 @@
         }
     };
 
-    var assignFunctions = function(appId) {
+    const assignFunctions = function(appId) {
         jQuery(`#save-ios-${appId}`).off("click").on("click", function() {
             saveURLScheme(platforms.ios.toLowerCase(), appId);
         });
@@ -118,28 +115,78 @@
         });
 
         jQuery(`#edit-ios-${appId}`).off("click").on("click", function() {
-            var scheme = getURLScheme(platforms.ios.toLowerCase(), appId);
+            const scheme = getURLScheme(platforms.ios.toLowerCase(), appId);
             if (scheme) {
                 editScheme(scheme, platforms.ios.toLowerCase(), appId);    
             }
         });
 
         jQuery(`#edit-android-${appId}`).off("click").on("click", function() {
-            var scheme = getURLScheme(platforms.android.toLowerCase(), appId);
+            const scheme = getURLScheme(platforms.android.toLowerCase(), appId);
             if (scheme) {
                 editScheme(scheme, platforms.android.toLowerCase(), appId);    
             }
         });
 
         jQuery("div#startTraceButton").off("click").on("click", function() {
-            var schemeiOS = getURLScheme(platforms.ios.toLowerCase(), appId);
-            var schemeAndroid = getURLScheme(platforms.android.toLowerCase(), appId);
-            if (schemeiOS) {
-                invokeTrace(schemeiOS, platforms.ios);
-            }
-            if (schemeAndroid) {
-                invokeTrace(schemeAndroid, platforms.android);
-            }
+            const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            apps.forEach(app => {
+                if (app.ios) {
+                    invokeTrace(app.ios, platforms.ios);
+                }
+                if (app.android) {
+                    invokeTrace(app.android, platforms.android);
+                }
+            });
+        });
+    };
+
+    const toggleStartTraceButton = function() {
+        const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        if (apps.length > 0) {
+            jQuery("div#startTraceButton").show();
+        } else {
+            jQuery("div#startTraceButton").hide();
+        }
+    };
+
+    const loadAppsFromStorage = function() {
+        const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        apps.forEach(app => {
+            appCounter = app.id;
+            const appHtml = `
+                <div id="app-${app.id}" class="app-entry">
+                    <hr>
+                    <h3>App ${app.id}</h3>
+                    <div id="ios-${app.id}">
+                        <h4>iOS App</h4>
+                        <div id="initial-ios-${app.id}">
+                            Enter your app's URL scheme, e.g. "myiosapp"
+                            <br />
+                            <span style="display:block;margin-left:auto;margin-right:auto;width:50%;">
+                                <input type="text" id="url-scheme-input-ios-${app.id}" style="font-size:12px;padding:4px;vertical-align:middle;" name="url-scheme">
+                                <a id="save-ios-${app.id}" class="btn btn-success save-ios">Save</a>
+                            </span>
+                        </div>
+                        <div id="url-scheme-saved-ios-${app.id}" style="display:none"></div>
+                    </div>
+                    <div id="android-${app.id}">
+                        <h4>Android App</h4>
+                        <div id="initial-android-${app.id}">
+                            Enter your app's URL scheme, e.g. "myandroidapp"
+                            <br />
+                            <span style="display:block;margin-left:auto;margin-right:auto;width:50%;">
+                                <input type="text" id="url-scheme-input-android-${app.id}" style="font-size:12px;padding:4px;vertical-align:middle;" name="url-scheme">
+                                <a id="save-android-${app.id}" class="btn btn-success save-android">Save</a>
+                            </span>
+                        </div>
+                        <div id="url-scheme-saved-android-${app.id}" style="display:none"></div>
+                    </div>
+                </div>
+            `;
+            jQuery("#apps-container").append(appHtml);
+            refreshUI(app.id);
+            assignFunctions(app.id);
         });
     };
 
@@ -147,8 +194,8 @@
         addApp();
     });
 
-    // Initial call to add the first app
-    addApp();
+    // Initial load from storage
+    loadAppsFromStorage();
 
 }());
 
