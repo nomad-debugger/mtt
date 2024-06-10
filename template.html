@@ -147,9 +147,9 @@
         const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
         apps.forEach(app => {
             if (app.ios || app.android) {
-                jQuery(`div#startTraceButton-${appId}`).show();
+                jQuery(`div#startTraceButton-${app.id}`).show();
             } else {
-                jQuery(`div#startTraceButton-${appId}`).hide();
+                jQuery(`div#startTraceButton-${app.id}`).hide();
             }
         });
     };
