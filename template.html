@@ -103,6 +103,8 @@
     };
 
     const assignFunctions = function(appId) {
+        debugger;
+        
         jQuery(`#save-ios-${appId}`).off("click").on("click", function() {
             saveURLScheme(platforms.ios.toLowerCase(), appId);
         });
