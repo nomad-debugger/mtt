@@ -125,30 +125,31 @@
             }
         });
 
-        JSON.parse(localStorage.getItem(STORAGE_KEY)) || [].forEach(main_app => {
-            jQuery("div#startTraceButton-" + main_app.id).off("click").on("click", function() {
-                const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                apps.forEach(app => {
-                    if (app.id === main_app.id) {
-                        if (app.ios) {
-                            invokeTrace(app.ios, platforms.ios);
-                        }
-                        if (app.android) {
-                            invokeTrace(app.android, platforms.android);
-                        }
+        jQuery(`div#startTraceButton--${appId}`).off("click").on("click", function() {
+            const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            apps.forEach(app => {
+                if (app.id === appId) {
+                    if (app.ios) {
+                        invokeTrace(app.ios, platforms.ios);
                     }
-                });
+                    if (app.android) {
+                        invokeTrace(app.android, platforms.android);
+                    }
+                }
             });
         });
+        
     };
 
     const toggleStartTraceButton = function() {
         const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        if (apps.length > 0) {
-            jQuery("div#startTraceButton").show();
-        } else {
-            jQuery("div#startTraceButton").hide();
-        }
+        apps.forEach(app => {
+            if (app.ios || app.android) {
+                jQuery("div#startTraceButton").show();
+            } else {
+                jQuery("div#startTraceButton").hide();
+            }
+        });
     };
 
     const loadAppsFromStorage = function() {
