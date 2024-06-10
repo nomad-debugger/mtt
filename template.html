@@ -104,7 +104,7 @@
 
     const assignFunctions = function(appId) {
         debugger;
-        
+
         jQuery(`#save-ios-${appId}`).off("click").on("click", function() {
             saveURLScheme(platforms.ios.toLowerCase(), appId);
         });
@@ -127,7 +127,7 @@
             }
         });
 
-        jQuery(`div#startTraceButton--${appId}`).off("click").on("click", function() {
+        jQuery(`div#startTraceButton-${appId}`).off("click").on("click", function() {
             const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
             apps.forEach(app => {
                 if (app.id === appId) {
@@ -147,9 +147,9 @@
         const apps = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
         apps.forEach(app => {
             if (app.ios || app.android) {
-                jQuery("div#startTraceButton").show();
+                jQuery(`div#startTraceButton-${appId}`).show();
             } else {
-                jQuery("div#startTraceButton").hide();
+                jQuery(`div#startTraceButton-${appId}`).hide();
             }
         });
     };
