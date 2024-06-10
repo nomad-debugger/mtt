@@ -1,6 +1,6 @@
 {
     "id" : "qr_trace_cust",
-    "icon_url" : "https://res.cloudinary.com/adidas-app/image/upload/c_limit,h_2532,q_auto:good,w_2532/v1/feed-assets/sdnwdmzlcyzxpheykszy.png",
+    "icon_url" : "https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/ico-company_tcm221-566971.png",
     "title": "Mobile Trace Tool Custom",
     "description": "This tool enhances the Trace feature by providing a QR code that can be scanned with your device, enabling you to quickly view events coming from the Tealium Mobile SDKs. For full documentation, see https://docs.tealium.com/.",
     "meta": {
