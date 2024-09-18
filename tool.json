@@ -12,7 +12,7 @@
         "qr_trace" : {
             "title": "iOS",
             "auto_inject": true,
-            "template": "https://whizzoo.github.io/mtt/template.html",
+            "template": "https://www.adidas.com/static/mtt/template.html",
             "js": "https://solutions.tealium.net/hosted/tealiumTools/mobile-trace/pageCode-mainwindow.js",
             "remote_js": true,
             "remote_template": true
