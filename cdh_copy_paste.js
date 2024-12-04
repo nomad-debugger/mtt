@@ -4755,7 +4755,8 @@ if (isCDH()) {
                   gApp.inMemoryModels.transformationCollection.filter(
                       transformation =>
                           transformation.hasQuantifier(att) &&
-                          att.get("transformationIds").indexOf(transformation.get("id")) < 0
+                          att.get("transformationIds").indexOf(transformation.get("id")) < 0 &&
+			  !transformation.get("hidden")
                   ).map(obj => obj.get('actionData').propertyQuantifierId || obj.get('actionData').quantifierId).forEach((e) => {
 		    this.copyAttribute(e);
 		});
