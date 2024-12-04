@@ -1,21 +1,22 @@
 {
-    "id" : "qr_trace_cust",
-    "icon_url" : "https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/ico-company_tcm221-566971.png",
-    "title": "Mobile Trace Tool Custom",
-    "description": "This tool enhances the Trace feature by providing a QR code that can be scanned with your device, enabling you to quickly view events coming from the Tealium Mobile SDKs. This tool is an enhancement over Tealium's original, in that it supports multiple apps at once.",
-    "meta": {
-        "links": [
-            "https://community.tealiumiq.com/t5/Customer-Data-Hub/Tealium-Tools-Mobile-QR-Trace/ta-p/34093"
-        ]
-    },
-    "scripts": {
-        "qr_trace" : {
-            "title": "iOS",
-            "auto_inject": true,
-            "template": "https://www.adidas.com/static/mtt/template.html",
-            "js": "https://solutions.tealium.net/hosted/tealiumTools/mobile-trace/pageCode-mainwindow.js",
-            "remote_js": true,
-            "remote_template": true
-        }
+  "id": "cdh_copy_paste",
+  "icon_url": "",
+  "description" : "",
+  "meta" : {
+    "description": "Selective CDH copy/paste functionality",
+    "links": [
+      "https://community.tealiumiq.com/t5/Team-Knowledge-Base/How-to-copy-a-Customer-Data-Hub-profile/ta-p/26347"
+    ]
+  },
+  "title": "CDH Copy/Paste",
+  "scripts": {
+    "cdh_copy_paste_tt": {
+      "title": "Gino's CDH Profile Copy/Paste",
+      "remote_template": true,
+      "template": "https://solutions.tealium.net/hosted/tealiumTools/cdh_copy_paste/ui.html",
+      "remote_js": true,
+      "js" : "https://www.adidas.com/static/mtt/cdh_copy_paste.js",
+      "auto_inject": true
     }
+  }
 }
