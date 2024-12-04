@@ -4756,7 +4756,9 @@ if (isCDH()) {
                       transformation =>
                           transformation.hasQuantifier(att) &&
                           att.get("transformationIds").indexOf(transformation.get("id")) < 0
-                  ).map(obj => obj.get('actionData').propertyQuantifierId || obj.get('actionData').quantifierId)
+                  ).map(obj => obj.get('actionData').propertyQuantifierId || obj.get('actionData').quantifierId).forEach((e) => {
+		    this.copyAttribute(e);
+		});
                           }
             },
             copyEnrichment: function (i) {
