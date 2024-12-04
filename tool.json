@@ -15,7 +15,7 @@
       "remote_template": true,
       "template": "https://solutions.tealium.net/hosted/tealiumTools/cdh_copy_paste/ui.html",
       "remote_js": true,
-      "js" : "https://whizzoo.github.io/mtt/cdh_copy_paste.js",
+      "js" : "https://nomad-debugger.github.io/mtt/cdh_copy_paste.js",
       "auto_inject": true
     }
   }
