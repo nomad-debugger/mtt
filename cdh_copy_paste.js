@@ -5435,7 +5435,7 @@ if (isCDH()) {
                     var current_conn = _store.connectors.visibleItems.filter(
                         (e) => e.id == current_id
                     )[0];
-                    replace_id = current_conn.id;
+                    replace_id = current_conn?.id;
                 }
                 if (replace_id) {
                     copy.id = current_conn.id;
